@@ -17,7 +17,7 @@ gmm = GaussianMixture(n_components=32, covariance_type='diag', random_state=42)
 gmm.fit(X)
 
 # Step 5: Analyze utterances containing the word "seven" (IDs 16, 17, 38, 39)
- seven_ids= [16, 17, 38, 39]
+seven_ids= [16, 17, 38, 39]
 
 plt.figure(figsize=(12, 8))
 
