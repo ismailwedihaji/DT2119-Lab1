@@ -24,7 +24,7 @@ plt.title("Expected MFCC (no lifter)")
 
 plt.subplot(2, 2, 2)
 plt.pcolormesh(my_mfcc)
-plt.title("Your MFCC (no lifter)")
+plt.title("Actual MFCC (no lifter)")
 
 plt.subplot(2, 2, 3)
 plt.pcolormesh(expected_lmfcc)
@@ -32,11 +32,10 @@ plt.title("Expected Liftered MFCC")
 
 plt.subplot(2, 2, 4)
 plt.pcolormesh(my_lmfcc)
-plt.title("Your Liftered MFCC")
+plt.title("Actual Liftered MFCC")
 
 plt.tight_layout()
 plt.show()
 
 # Step 4: Numeric check
 print("Mean diff (MFCC):", np.mean(np.abs(my_mfcc - expected_mfcc)))
-print("Mean diff (liftered MFCC):", np.mean(np.abs(my_lmfcc - expected_lmfcc)))

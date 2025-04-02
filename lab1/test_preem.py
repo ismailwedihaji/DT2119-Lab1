@@ -22,7 +22,7 @@ plt.title("Expected Pre-emphasis")
 
 plt.subplot(1, 2, 2)
 plt.pcolormesh(my_preemp)
-plt.title("Your Pre-emphasis Output")
+plt.title("Actual Pre-emphasis Output")
 
 plt.tight_layout()
 plt.show()
@@ -30,4 +30,4 @@ plt.show()
 # Also check numeric similarity
 diff = np.abs(my_preemp - expected_preemp)
 print("Mean difference:", np.mean(diff))
-print("Max difference:", np.max(diff))
+

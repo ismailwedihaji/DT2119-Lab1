@@ -21,7 +21,7 @@ plt.title("Expected Mel Spectrum")
 
 plt.subplot(1, 2, 2)
 plt.pcolormesh(my_mspec)
-plt.title("Your Mel Spectrum")
+plt.title("Actual Mel Spectrum")
 
 plt.tight_layout()
 plt.show()
@@ -29,4 +29,4 @@ plt.show()
 # Optional: print numeric difference
 diff = np.abs(expected_mspec - my_mspec)
 print("Mean difference:", np.mean(diff))
-print("Max difference:", np.max(diff))
+

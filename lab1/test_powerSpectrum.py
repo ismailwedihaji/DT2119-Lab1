@@ -21,7 +21,7 @@ plt.title("Expected Power Spectrum (example['spec'])")
 
 plt.subplot(1, 2, 2)
 plt.pcolormesh(my_spec)
-plt.title("Your Power Spectrum Output")
+plt.title("Actual Power Spectrum Output")
 plt.tight_layout()
 plt.show()
 
@@ -29,4 +29,4 @@ plt.show()
 mean_diff = np.mean(np.abs(expected_spec - my_spec))
 max_diff = np.max(np.abs(expected_spec - my_spec))
 print(f"Mean difference: {mean_diff}")
-print(f"Max difference: {max_diff}")
+

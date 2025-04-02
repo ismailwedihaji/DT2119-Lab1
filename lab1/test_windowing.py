@@ -23,7 +23,7 @@ plt.title("Expected Windowed Output")
 
 plt.subplot(1, 2, 2)
 plt.pcolormesh(my_windowed)
-plt.title("Your Windowing Output")
+plt.title("Actual Windowing Output")
 
 plt.tight_layout()
 plt.show()
@@ -31,4 +31,4 @@ plt.show()
 # Optional: print small difference
 diff = np.abs(my_windowed - expected_windowed)
 print("Mean difference:", np.mean(diff))
-print("Max difference:", np.max(diff))
+
