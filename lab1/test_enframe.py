@@ -10,7 +10,7 @@ example = np.load('lab1_example.npz', allow_pickle=True)['example'].item()
 samples = example['samples']
 expected_frames = example['frames']
 
-# Run your enframe function
+
 my_frames = enframe(samples, winlen=400, winshift=200)
 
 # Visualize both (your result vs expected)
