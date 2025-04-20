@@ -1,6 +1,5 @@
 import numpy as np
 from tools2 import *
-from lab2_tools import logsumexp
 
 # already implemented
 def concatTwoHMMs(hmm1, hmm2):
@@ -114,19 +113,6 @@ def forward(log_emlik, log_startprob, log_transmat):
     Output:
         forward_prob: NxM array of forward log probabilities for each of the M states in the model
     """
-    N, M = log_emlik.shape
-    log_alpha = np.zeros((N, M))
-    
-    # Initialization
-    log_alpha[0] = log_startprob[:M] + log_emlik[0]
-    
-    # Recursion
-    for n in range(1, N):
-        for j in range(M):
-            log_alpha[n, j] = logsumexp(log_alpha[n - 1] + log_transmat[:M, j]) + log_emlik[n, j]
-
-    return log_alpha
-
 
 def backward(log_emlik, log_startprob, log_transmat):
     """Backward (beta) probabilities in log domain.
