@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.mixture import GaussianMixture
-from lab1_proto import mfcc  # Your own MFCC function
+from lab1_proto import mfcc  
 
 # Step 1: Load the dataset
 data = np.load("lab1_data.npz", allow_pickle=True)["data"]
@@ -22,8 +22,8 @@ seven_ids= [16, 17, 38, 39]
 plt.figure(figsize=(12, 8))
 
 for i, utt_id in enumerate(seven_ids):
-    mfcc_feat = mfcc(data[utt_id]["samples"])               # Extract MFCC for the utterance
-    posteriors = gmm.predict_proba(mfcc_feat)               # [frames x 32] posterior matrix
+    mfcc_feat = mfcc(data[utt_id]["samples"])               
+    posteriors = gmm.predict_proba(mfcc_feat)               
 
     plt.subplot(2, 2, i + 1)
     plt.pcolormesh(posteriors.T, cmap='viridis', shading='auto')  # Plot [32 x frames]
