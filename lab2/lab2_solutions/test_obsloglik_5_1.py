@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-# Add parent folder to import custom modules
 sys.path.append(os.path.abspath(".."))
 
 from lab2_tools import log_multivariate_normal_density_diag
@@ -18,11 +17,11 @@ example = np.load('../lab2_example.npz', allow_pickle=True)['example'].item()
 wordHMM = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
 
 # Step 3: Extract input features (MFCCs) from the example
-X = example['lmfcc']  # shape = (n_frames, 13)
+X = example['lmfcc']  
 
 # Step 4: Extract HMM parameters
-means = wordHMM['means']     # shape = (n_states, 13)
-covars = wordHMM['covars']   # shape = (n_states, 13)
+means = wordHMM['means']     
+covars = wordHMM['covars']   
 
 # Step 5: Compute log-likelihood of each frame for each state
 obsloglik = log_multivariate_normal_density_diag(X, means, covars)
@@ -41,3 +40,4 @@ plt.show()
 print("Shape of obsloglik:", obsloglik.shape)
 print("Shape of example obsloglik:", example['obsloglik'].shape)
 print("Match with example:", np.allclose(obsloglik, example['obsloglik'], atol=1e-4))
+print(obsloglik)

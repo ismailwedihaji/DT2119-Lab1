@@ -3,13 +3,11 @@ import os
 import sys
 import matplotlib.pyplot as plt
 
-# Add parent directory to path
 sys.path.append(os.path.abspath(".."))
 
 from lab2_proto import forward, concatHMMs
 from lab2_tools import logsumexp
 
-# Load models and example
 phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
 example = np.load('../lab2_example.npz', allow_pickle=True)['example'].item()
 
@@ -30,6 +28,7 @@ plt.title('Forward Algorithm: Log Alpha')
 plt.xlabel('Time Frame')
 plt.ylabel('HMM State')
 plt.show()
+
 # Step 4: Compare with example
 print("Shape match:", logalpha.shape == example['logalpha'].shape)
 print("Content match:", np.allclose(logalpha, example['logalpha'], atol=1e-4))
@@ -37,3 +36,5 @@ print("Content match:", np.allclose(logalpha, example['logalpha'], atol=1e-4))
 # Step 5: Compute total log-likelihood from logalpha
 loglik = logsumexp(logalpha[-1])
 print("Log-likelihood match:", np.isclose(loglik, example['loglik'], atol=1e-4))
+
+

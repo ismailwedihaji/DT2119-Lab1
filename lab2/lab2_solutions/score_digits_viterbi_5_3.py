@@ -4,20 +4,19 @@ import sys
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-# Fix import path for parent folder
 sys.path.append(os.path.abspath(".."))
 
 from lab2_tools import log_multivariate_normal_density_diag
 from lab2_proto import concatHMMs, viterbi
 from prondict import prondict  
 
-# Load phone-level HMMs and utterance data
-# phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
-phoneHMMs = np.load('../lab2_models_all.npz', allow_pickle=True)['phoneHMMs'].item()
+
+phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
+#phoneHMMs = np.load('../lab2_models_all.npz', allow_pickle=True)['phoneHMMs'].item()
 data = np.load('../lab2_data.npz', allow_pickle=True)['data']
 
-# Build word-level HMMs using prondict and silences
-digit_list = list(prondict.keys())  # ['o', 'z', '1', ..., '9']
+
+digit_list = list(prondict.keys())  
 wordHMMs = {
     digit: concatHMMs(phoneHMMs, ['sil'] + prondict[digit] + ['sil'])
     for digit in digit_list

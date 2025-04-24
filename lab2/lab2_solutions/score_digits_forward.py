@@ -10,8 +10,8 @@ from lab2_proto import concatHMMs, forward
 from prondict import prondict  
 
 # Load phone-level HMMs and all utterance data
-# phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
-phoneHMMs = np.load('../lab2_models_all.npz', allow_pickle=True)['phoneHMMs'].item()
+phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
+#phoneHMMs = np.load('../lab2_models_all.npz', allow_pickle=True)['phoneHMMs'].item()
 
 data = np.load('../lab2_data.npz', allow_pickle=True)['data']
 
@@ -27,7 +27,7 @@ correct = 0
 for i, utterance in enumerate(data):
     X = utterance['lmfcc']
     true_digit = utterance['digit']
-
+    
     best_loglik = -np.inf
     best_digit = None
 

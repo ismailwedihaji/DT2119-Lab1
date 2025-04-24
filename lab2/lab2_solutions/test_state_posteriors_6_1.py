@@ -5,12 +5,11 @@ sys.path.append(os.path.abspath(".."))
 from lab2_proto import forward, backward, statePosteriors, concatHMMs
 from lab2_tools import log_multivariate_normal_density_diag
 
-# Load the example utterance and HMM model
 example = np.load('../lab2_example.npz', allow_pickle=True)['example'].item()
 phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
 wordHMM = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
 
-# Extract features and compute log-emission likelihoods
+
 X = example['lmfcc']
 log_emlik = log_multivariate_normal_density_diag(X, wordHMM['means'], wordHMM['covars'])
 log_startprob = np.log(wordHMM['startprob'])

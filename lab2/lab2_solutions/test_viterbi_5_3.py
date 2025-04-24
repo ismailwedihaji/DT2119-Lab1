@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(".."))
 from lab2_tools import log_multivariate_normal_density_diag
 from lab2_proto import viterbi, concatHMMs
 
-# Load data
+
 example = np.load('../lab2_example.npz', allow_pickle=True)['example'].item()
 phoneHMMs = np.load('../lab2_models_onespkr.npz', allow_pickle=True)['phoneHMMs'].item()
 wordHMM = concatHMMs(phoneHMMs, ['sil', 'ow', 'sil'])
