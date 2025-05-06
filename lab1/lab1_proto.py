@@ -48,7 +48,7 @@ def mfcc(samples, winlen = 400, winshift = 200, preempcoeff=0.97, nfft=512, ncep
     ceps = cepstrum(mspecs, nceps)
     return lifter(ceps, liftercoeff)
 
-# Functions to be implemented ----------------------------------
+
 
 def enframe(samples, winlen, winshift):
     """

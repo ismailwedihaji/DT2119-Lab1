@@ -1,6 +1,6 @@
 import numpy as np
-from tools2 import *
 from lab2_tools import logsumexp
+
 
 # already implemented
 def concatTwoHMMs(hmm1, hmm2):
@@ -114,16 +114,16 @@ def forward(log_emlik, log_startprob, log_transmat):
     Output:
         forward_prob: NxM array of forward log probabilities for each of the M states in the model
     """
-    N, M = log_emlik.shape
+    N, M = log_emlik.shape  # N time frames, M states
     log_alpha = np.zeros((N, M))
-    
-    # Initialization
+
+    # Initialization step
     log_alpha[0] = log_startprob[:M] + log_emlik[0]
-    
-    # Recursion
-    for n in range(1, N):
+
+    # Recursion step
+    for t in range(1, N):
         for j in range(M):
-            log_alpha[n, j] = logsumexp(log_alpha[n - 1] + log_transmat[:M, j]) + log_emlik[n, j]
+            log_alpha[t, j] = logsumexp(log_alpha[t - 1] + log_transmat[:M, j]) + log_emlik[t, j]
 
     return log_alpha
 
@@ -139,6 +139,20 @@ def backward(log_emlik, log_startprob, log_transmat):
     Output:
         backward_prob: NxM array of backward log probabilities for each of the M states in the model
     """
+    N, M = log_emlik.shape
+    log_beta = np.zeros((N, M))
+
+    # Initialization at last time step: log(1) = 0
+    log_beta[-1, :] = 0
+
+    # Recursion: move backward from T-2 to 0
+    for t in range(N - 2, -1, -1):
+        for i in range(M):
+            log_beta[t, i] = logsumexp(
+                log_transmat[i, :M] + log_emlik[t + 1, :] + log_beta[t + 1, :]
+            )
+
+    return log_beta
 
 def viterbi(log_emlik, log_startprob, log_transmat, forceFinalState=True):
     """Viterbi path.
@@ -154,6 +168,35 @@ def viterbi(log_emlik, log_startprob, log_transmat, forceFinalState=True):
         viterbi_loglik: log likelihood of the best path
         viterbi_path: best path
     """
+    N, M = log_emlik.shape
+    logdelta = np.full((N, M), -np.inf)  # Viterbi log-likelihoods
+    psi = np.zeros((N, M), dtype=int)    # backpointers
+
+    # Initialization
+    logdelta[0] = log_startprob[:M] + log_emlik[0]
+
+    # Recursion
+    for t in range(1, N):
+        for j in range(M):
+            scores = logdelta[t - 1] + log_transmat[:M, j]
+            psi[t, j] = np.argmax(scores)
+            logdelta[t, j] = np.max(scores) + log_emlik[t, j]
+
+    # Termination
+    if forceFinalState:
+        last_state = M - 1
+        viterbi_loglik = logdelta[-1, last_state]
+    else:
+        last_state = np.argmax(logdelta[-1])
+        viterbi_loglik = logdelta[-1, last_state]
+
+    # Backtracking
+    viterbi_path = np.zeros(N, dtype=int)
+    viterbi_path[-1] = last_state
+    for t in range(N - 2, -1, -1):
+        viterbi_path[t] = psi[t + 1, viterbi_path[t + 1]]
+
+    return viterbi_loglik, viterbi_path
 
 def statePosteriors(log_alpha, log_beta):
     """State posterior (gamma) probabilities in log domain.
@@ -166,6 +209,13 @@ def statePosteriors(log_alpha, log_beta):
     Output:
         log_gamma: NxM array of gamma probabilities for each of the M states in the model
     """
+    log_gamma = log_alpha + log_beta  # element-wise add
+
+    # Normalize each row with logsumexp to get valid probabilities (in log domain)
+    for t in range(log_gamma.shape[0]):
+        log_gamma[t] -= logsumexp(log_gamma[t])  # subtract log-sum-exp to normalize
+
+    return log_gamma
 
 def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
     """ Update Gaussian parameters with diagonal covariance
@@ -182,3 +232,33 @@ def updateMeanAndVar(X, log_gamma, varianceFloor=5.0):
          means: MxD mean vectors for each state
          covars: MxD covariance (variance) vectors for each state
     """
+    # Convert from log domain to linear domain
+    gamma = np.exp(log_gamma)
+
+    # Number of states (M) and feature dimension (D)
+    N, D = X.shape
+    M = gamma.shape[1]
+
+    # Initialize outputs
+    means = np.zeros((M, D))
+    covars = np.zeros((M, D))
+
+    # For each state i
+    for i in range(M):
+        # Gamma weights for state i
+        gamma_i = gamma[:, i]  # Shape (N,)
+
+        # Denominator for normalization
+        gamma_sum = np.sum(gamma_i)
+
+        # Weighted mean
+        means[i] = np.sum(gamma_i[:, np.newaxis] * X, axis=0) / gamma_sum
+
+        # Weighted variance
+        diff = X - means[i]
+        covars[i] = np.sum(gamma_i[:, np.newaxis] * diff**2, axis=0) / gamma_sum
+
+    # Apply variance floor
+    covars = np.maximum(covars, varianceFloor)
+
+    return means, covars
