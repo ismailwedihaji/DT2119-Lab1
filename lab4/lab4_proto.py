@@ -13,23 +13,28 @@ test_audio_transform = ...
 
 # Functions to be implemented ----------------------------------
 
-def intToStr(labels):
-    '''
-        convert list of integers to string
-    Args: 
-        labels: list of ints
-    Returns:
-        string with space-separated characters
-    '''
-
 def strToInt(text):
-    '''
-        convert string to list of integers
-    Args:
-        text: string
-    Returns:
-        list of ints
-    '''
+    result = []
+    for char in text:
+        if char == "'":
+            result.append(0)
+        elif char == ' ':
+            result.append(1)
+        else:
+            result.append(ord(char) - ord('a') + 2)
+    return result
+
+def intToStr(labels):
+    result = ""
+    for label in labels:
+        if label == 0:
+            result += "'"
+        elif label == 1:
+            result += " "
+        elif 2 <= label <= 27:
+            result += chr(label - 2 + ord('a'))
+    return result
+
 
 def dataProcessing(data, transform):
     '''
